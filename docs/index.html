@@ -1091,7 +1091,7 @@
 <div class="landing-page" id="landingPage">
   <div class="landing-bg"></div>
   <div class="landing-content">
-    <div class="logo-placeholder"><img src="Powerpilot.png" alt="PowerPilot Logo" /></div>
+    <div class="logo-placeholder"><img src="Powerpilot_logo.png" alt="PowerPilot Logo" /></div>
     <h1 class="landing-title">POWERPILOT</h1>
     <p class="landing-subtitle">Take Control of Every Watt</p>
     <!-- Auth section: shown when NOT logged in -->
@@ -1178,7 +1178,7 @@
   <header>
     <div class="header-left">
       <div class="header-logo" onclick="navigateTo('landing')">
-        <div class="header-logo-icon"><img src="Powerpilot.png" alt="PowerPilot Logo" /></div>
+        <div class="header-logo-icon"><img src="Powerpilot_logo.png" alt="PowerPilot Logo" /></div>
         <div class="header-logo-text">POWERPILOT</div>
       </div>
       <div class="breadcrumb">
@@ -1277,7 +1277,7 @@
   <header>
     <div class="header-left">
       <div class="header-logo" onclick="navigateTo('landing')">
-        <div class="header-logo-icon"><img src="Powerpilot.png" alt="PowerPilot Logo" /></div>
+        <div class="header-logo-icon"><img src="Powerpilot_logo.png" alt="PowerPilot Logo" /></div>
         <div class="header-logo-text">POWERPILOT</div>
       </div>
       <div class="breadcrumb">
@@ -1380,7 +1380,7 @@
   <header>
     <div class="header-left">
       <div class="header-logo" onclick="navigateTo('landing')">
-        <div class="header-logo-icon"><img src="Powerpilot.png" alt="PowerPilot Logo" /></div>
+        <div class="header-logo-icon"><img src="Powerpilot_logo.png" alt="PowerPilot Logo" /></div>
         <div class="header-logo-text">POWERPILOT</div>
       </div>
       <div class="breadcrumb">
@@ -1421,7 +1421,7 @@
   <header>
     <div class="header-left">
       <div class="header-logo" onclick="navigateTo('landing')">
-        <div class="header-logo-icon"><img src="Powerpilot.png" alt="PowerPilot Logo" /></div>
+        <div class="header-logo-icon"><img src="Powerpilot_logo.png" alt="PowerPilot Logo" /></div>
         <div class="header-logo-text">POWERPILOT</div>
       </div>
       <div class="breadcrumb">
@@ -1508,7 +1508,6 @@
 
   // ============ NAVIGATION ============
   function navigateTo(page) {
-    // Require login for dashboard pages
     if (page !== 'landing' && !getCurrentUser()) {
       showToast('Please log in first 🔒');
       openModal('login');
@@ -1559,7 +1558,6 @@
     setTimeout(() => openModal(type), 150);
   }
 
-  // Close modal on overlay click
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) closeModals();
@@ -1576,7 +1574,6 @@
   function closeAllDropdowns() {
     document.querySelectorAll('.user-dropdown').forEach(d => d.classList.remove('active'));
   }
-  // Close dropdowns when clicking outside
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.user-menu')) closeAllDropdowns();
   });
@@ -1679,14 +1676,10 @@
     const displayName = isLoggedIn ? user.name : 'Guest';
     const displayEmail = isLoggedIn ? user.email : '—';
 
-    // Update all avatar initials
     document.querySelectorAll('.user-avatar').forEach(a => { a.textContent = initial; });
-
-    // Update all dropdown names/emails
     document.querySelectorAll('[data-bind="userName"]').forEach(el => { el.textContent = displayName; });
     document.querySelectorAll('[data-bind="userEmail"]').forEach(el => { el.textContent = displayEmail; });
 
-    // Toggle landing page sections based on auth state
     const authSection = document.getElementById('landingAuthSection');
     const dashSection = document.getElementById('landingDashSection');
     const welcomeEl = document.getElementById('landingWelcome');
@@ -1701,7 +1694,6 @@
       }
     }
 
-    // Update profile page
     if (isLoggedIn) {
       document.getElementById('profileAvatarLg').textContent = initial;
       document.getElementById('profileName').textContent = user.name;
@@ -1792,8 +1784,6 @@
   function initCharts(hours) {
     const interval = hours <= 1 ? 1 : hours <= 6 ? 2 : 5;
 
-    // --- Simulated daily power pattern (Indian household) ---
-    // Morning spike 6-9, mid-day dip, evening peak 18-22
     function powerBase(p, t) {
       const h = t.getHours() + t.getMinutes() / 60;
       if (h >= 6 && h < 9) return 900 + 400 * Math.sin((h - 6) / 3 * Math.PI);
@@ -1806,7 +1796,6 @@
     const powerData = generateTimeSeries(hours, interval, powerBase, () => rand(-40, 40));
     const currentData = generateTimeSeries(hours, interval, currentBase, () => rand(-0.1, 0.1));
 
-    // Power & Current chart
     makeChart('powerChart', {
       type: 'line',
       data: {
@@ -1826,7 +1815,6 @@
     document.getElementById('statAvgCurrent').textContent = avg(currentData).toFixed(1) + ' A';
     document.getElementById('statPeakCurrent').textContent = maxVal(currentData).toFixed(1) + ' A';
 
-    // --- Voltage ---
     const voltData = generateTimeSeries(hours, interval,
       (p, t) => { const h = t.getHours(); return (h >= 18 && h < 22) ? 215 + rand(-3, 3) : 225 + rand(-5, 5); },
       () => rand(-2, 2)
@@ -1845,7 +1833,6 @@
     document.getElementById('statAvgV').textContent = avg(voltData).toFixed(1) + ' V';
     document.getElementById('statMaxV').textContent = maxVal(voltData).toFixed(1) + ' V';
 
-    // --- Temperature ---
     const tempData = generateTimeSeries(hours, interval,
       (p, t) => { const h = t.getHours(); return 28 + (h >= 12 && h < 18 ? 12 : h >= 18 && h < 22 ? 15 : 5) * Math.sin(p * Math.PI); },
       () => rand(-1, 1)
@@ -1864,7 +1851,6 @@
     document.getElementById('statAvgT').textContent = avg(tempData).toFixed(1) + '°C';
     document.getElementById('statMaxT').textContent = maxVal(tempData).toFixed(1) + '°C';
 
-    // --- Power Factor ---
     const pfData = generateTimeSeries(hours, interval,
       (p, t) => { const h = t.getHours(); return (h >= 6 && h < 22) ? 0.88 + 0.08 * Math.sin(p * Math.PI * 2) : 0.65 + rand(0, 0.15); },
       () => rand(-0.02, 0.02)
@@ -1880,7 +1866,6 @@
       options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 0.4, max: 1.0 } } }
     });
 
-    // --- Frequency ---
     const freqData = generateTimeSeries(hours, interval,
       () => 50,
       () => rand(-0.15, 0.15)
@@ -1896,7 +1881,6 @@
       options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 49.5, max: 50.5 } } }
     });
 
-    // --- Energy Bar Chart (7 days) ---
     const days = [];
     const kwhData = [];
     const costData = [];
@@ -1905,7 +1889,7 @@
       days.push(d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' }));
       const kwh = parseFloat(rand(8, 22).toFixed(1));
       kwhData.push(kwh);
-      costData.push(parseFloat((kwh * 6.5).toFixed(1))); // ₹6.5/kWh approx
+      costData.push(parseFloat((kwh * 6.5).toFixed(1)));
     }
     makeChart('energyBarChart', {
       type: 'bar',

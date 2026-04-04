@@ -797,7 +797,28 @@
       margin-bottom: 28px;
     }
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .password-field-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .password-toggle-icon {
+      position: absolute;
+      right: 14px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: all 0.2s;
+      z-index: 10;
+      user-select: none;
+    }
+    .password-toggle-icon:hover {
+      opacity: 1;
+      transform: scale(1.1);
     }
     .form-group label {
       display: block;
@@ -811,6 +832,7 @@
     .form-group input {
       width: 100%;
       padding: 12px 16px;
+      padding-right: 44px; /* Space for the toggle icon */
       background: var(--bg3);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -1131,7 +1153,10 @@
       </div>
       <div class="form-group">
         <label for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" required />
+        <div class="password-field-container">
+          <input type="password" id="loginPassword" placeholder="••••••••" required />
+          <img src="show_pass.png" class="password-toggle-icon" id="toggleLogin" onclick="togglePasswordVisibility('loginPassword', 'toggleLogin')" alt="Show/Hide Password" />
+        </div>
       </div>
       <button type="submit" class="auth-btn">Log In</button>
     </form>
@@ -1161,11 +1186,17 @@
       </div>
       <div class="form-group">
         <label for="signupPassword">Password</label>
-        <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6" />
+        <div class="password-field-container">
+          <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6" />
+          <img src="show_pass.png" class="password-toggle-icon" id="toggleSignup" onclick="togglePasswordVisibility('signupPassword', 'toggleSignup')" alt="Show/Hide Password" />
+        </div>
       </div>
       <div class="form-group">
         <label for="signupConfirm">Confirm Password</label>
-        <input type="password" id="signupConfirm" placeholder="••••••••" required />
+        <div class="password-field-container">
+          <input type="password" id="signupConfirm" placeholder="••••••••" required />
+          <img src="show_pass.png" class="password-toggle-icon" id="toggleConfirm" onclick="togglePasswordVisibility('signupConfirm', 'toggleConfirm')" alt="Show/Hide Password" />
+        </div>
       </div>
       <button type="submit" class="auth-btn">Create Account</button>
     </form>
@@ -1593,6 +1624,19 @@
   }
   function clearCurrentUser() {
     localStorage.removeItem('pp-currentUser');
+  }
+
+  // ============ PASSWORD TOGGLE ============
+  function togglePasswordVisibility(inputId, toggleId) {
+    const input = document.getElementById(inputId);
+    const toggle = document.getElementById(toggleId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      toggle.src = 'hide_pass.png';
+    } else {
+      input.type = 'password';
+      toggle.src = 'show_pass.png';
+    }
   }
 
   // ============ SIGNUP ============
